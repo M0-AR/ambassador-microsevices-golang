@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"net/smtp"
 )
 
 func main() {
@@ -29,13 +31,21 @@ func main() {
 		} else {
 			// The client will automatically try to recover from all errors.
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
+			return
 		}
+
+		fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+
+		var message map[string]interface{}
+
+		json.Unmarshal(msg.Value, &message)
+
+		ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", message["ambassador_revenue"], message["code"]))
+		smtp.SendMail("localhost:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage)
+
+		adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", message["id"].(int), message["admin_revenue"]))
+		smtp.SendMail("localhost:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
 	}
 
 	consumer.Close()
-	//ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", ambassadorRevenue, order.Code))
-	//smtp.SendMail("host.docker.internal:1025", nil, "no-reply@email.com", []string{order.AmbassadorEmail}, ambassadorMessage)
-	//
-	//adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", order.Id, adminRevenue))
-	//smtp.SendMail("host.docker.internal:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
 }
