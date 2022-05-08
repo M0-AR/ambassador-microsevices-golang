@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 	"users/src/database"
+	"users/src/middlewares"
 	"users/src/models"
 )
 
@@ -34,4 +35,51 @@ func Register(c *fiber.Ctx) error {
 	database.DB.Create(&user)
 
 	return c.JSON(user)
+}
+
+func Login(c *fiber.Ctx) error {
+	var data map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	var user models.User
+
+	database.DB.Where("email = ?", data["email"]).First(&user)
+
+	if user.Id == 0 {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Invalid Credentials",
+		})
+	}
+
+	if err := user.ComparePassword(data["password"]); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Invalid Credentials",
+		})
+	}
+
+	// Not allow the ambassador to login in admin side, just the admin can do that
+	if data["scope"] != "ambassador" && user.IsAmbassador {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthorized",
+		})
+	}
+
+	token, err := middlewares.GenerateJWT(user.Id, data["scope"])
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Invalid Credentials",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"jwt": token,
+	})
 }
