@@ -40,11 +40,11 @@ func main() {
 
 		json.Unmarshal(msg.Value, &message)
 
-		ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", message["ambassador_revenue"], message["code"]))
-		smtp.SendMail("localhost:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage)
+		ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", message["ambassador_revenue"].(float64), message["code"]))
+		smtp.SendMail("host.docker.internal:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage)
 
-		adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", message["id"].(int), message["admin_revenue"]))
-		smtp.SendMail("localhost:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
+		adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", message["id"].(float64), message["admin_revenue"].(float64)))
+		smtp.SendMail("host.docker.internal:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
 	}
 
 	consumer.Close()
