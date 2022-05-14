@@ -11,6 +11,7 @@ func Setup(app *fiber.App) {
 
 	api.Post("register", controllers.Register)
 	api.Post("login", controllers.Login)
+	api.Get("users", controllers.Users)
 
 	authenticated := api.Use(middlewares.IsAuthenticated)
 	authenticated.Get("user", controllers.User)
