@@ -95,19 +95,24 @@ func Login(c *fiber.Ctx) error {
 }
 
 func User(c *fiber.Ctx) error {
-	id, _ := middlewares.GetUserId(c)
+	scopeAdminParamAmbassador := c.Context().UserValue("scope") == "admin" && c.Params("scope") == "ambassador"
+	scopeAmbassadorParamAdmin := c.Context().UserValue("scope") == "ambassador" && c.Params("scope") == "admin"
 
-	var user models.User
+	if scopeAdminParamAmbassador || scopeAmbassadorParamAdmin {
 
-	database.DB.Where("id = ?", id).First(&user)
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthorized",
+		})
+	}
 
-	return c.JSON(user)
+	return c.JSON(c.Context().UserValue("user"))
 }
 
 func Logout(c *fiber.Ctx) error {
-	id, _ := middlewares.GetUserId(c)
+	user := c.Context().UserValue("user").(models.User)
 
-	database.DB.Delete(models.UserToken{}, "user_id = ?", id)
+	database.DB.Delete(models.UserToken{}, "user_id = ?", user.Id)
 
 	return c.JSON(fiber.Map{
 		"message": "success",
@@ -121,14 +126,11 @@ func UpdateInfo(c *fiber.Ctx) error {
 		return err
 	}
 
-	id, _ := middlewares.GetUserId(c)
+	user := c.Context().UserValue("user").(models.User)
 
-	user := models.User{
-		FirstName: data["first_name"],
-		LastName:  data["last_name"],
-		Email:     data["email"],
-	}
-	user.Id = id
+	user.FirstName = data["first_name"]
+	user.LastName = data["last_name"]
+	user.Email = data["email"]
 
 	database.DB.Model(&user).Updates(&user)
 
@@ -149,10 +151,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	id, _ := middlewares.GetUserId(c)
-
-	user := models.User{}
-	user.Id = id
+	user := c.Context().UserValue("user").(models.User)
 
 	user.SetPassword(data["password"])
 
