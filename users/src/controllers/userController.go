@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"strconv"
+	"time"
 	"users/src/database"
 	"users/src/middlewares"
 	"users/src/models"
@@ -79,6 +80,15 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	userToken := models.UserToken{
+		UserId:    user.Id,
+		Token:     token,
+		CreatedAt: time.Now(),
+		ExpiredAt: time.Now().Add(time.Hour * 24),
+	}
+
+	database.DB.Create(&userToken)
+
 	return c.JSON(fiber.Map{
 		"jwt": token,
 	})
@@ -92,4 +102,14 @@ func User(c *fiber.Ctx) error {
 	database.DB.Where("id = ?", id).First(&user)
 
 	return c.JSON(user)
+}
+
+func Logout(c *fiber.Ctx) error {
+	id, _ := middlewares.GetUserId(c)
+
+	database.DB.Delete(models.UserToken{}, "user_id = ?", id)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }

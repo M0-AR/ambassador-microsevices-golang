@@ -5,6 +5,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 	"time"
+	"users/src/database"
+	"users/src/models"
 )
 
 const SecretKey = "secret"
@@ -22,6 +24,21 @@ func IsAuthenticated(c *fiber.Ctx) error {
 	})
 
 	if err != nil || !token.Valid {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthenticated",
+		})
+	}
+
+	payload := token.Claims.(*ClaimsWithScope)
+
+	id, _ := strconv.Atoi(payload.Subject)
+
+	var userToken models.UserToken
+
+	database.DB.Where("user_id = ? and token = ? and expired_at >= now()", id, token.Raw).Last(&userToken)
+
+	if userToken.Id == 0 {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(fiber.Map{
 			"message": "unauthenticated",
