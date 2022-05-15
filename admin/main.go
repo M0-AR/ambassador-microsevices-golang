@@ -2,8 +2,8 @@ package main
 
 import (
 	"admin/src/database"
+	"admin/src/services"
 	//"admin/src/routes"
-	//"admin/src/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -11,7 +11,7 @@ import (
 func main() {
 	database.Connect()
 	database.AutoMigrate()
-	//services.Setup()
+	services.Setup()
 
 	app := fiber.New()
 
