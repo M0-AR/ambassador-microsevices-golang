@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 
-	consumer.SubscribeTopics([]string{"admin_topic"}, nil)
+	consumer.SubscribeTopics([]string{"ambassador_topic"}, nil)
 
 	for {
 		msg, err := consumer.ReadMessage(-1)
