@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"admin/src/database"
+	"admin/src/events"
 	"admin/src/models"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
@@ -24,7 +25,7 @@ func CreateProduct(c *fiber.Ctx) error {
 
 	database.DB.Create(&product)
 
-	//go database.ClearCache("products_frontend", "products_backend")
+	events.Produce("ambassador_topic", "product_created", product)
 
 	return c.JSON(product)
 }
@@ -53,7 +54,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	database.DB.Model(&product).Updates(&product)
 
-	//go database.ClearCache("products_frontend", "products_backend")
+	events.Produce("ambassador_topic", "product_updated", product)
 
 	return c.JSON(product)
 }
@@ -66,7 +67,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 
 	database.DB.Delete(&product)
 
-	//go database.ClearCache("products_frontend", "products_backend")
+	events.Produce("ambassador_topic", "product_deleted", id)
 
 	return nil
 }

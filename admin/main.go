@@ -2,6 +2,7 @@ package main
 
 import (
 	"admin/src/database"
+	"admin/src/events"
 	"admin/src/routes"
 	"admin/src/services"
 	//"admin/src/routes"
@@ -13,6 +14,7 @@ func main() {
 	database.Connect()
 	database.AutoMigrate()
 	services.Setup()
+	events.SetupProducer()
 
 	app := fiber.New()
 
