@@ -5,13 +5,13 @@ import (
 )
 
 type User struct {
-	Id           uint     `json:"id"`
-	FirstName    string   `json:"first_name"`
-	LastName     string   `json:"last_name"`
-	Email        string   `json:"email" gorm:"unique"`
-	Password     []byte   `json:"-"`
-	IsAmbassador bool     `json:"is_ambassador"`
-	Revenue      *float64 `json:"revenue"`
+	Id           uint    `json:"id"`
+	FirstName    string  `json:"first_name"`
+	LastName     string  `json:"last_name"`
+	Email        string  `json:"email" gorm:"unique"`
+	Password     []byte  `json:"-"`
+	IsAmbassador bool    `json:"is_ambassador"`
+	Revenue      float64 `json:"revenue"`
 }
 
 func (user *User) Name() string {
@@ -33,5 +33,5 @@ func (ambassador *Ambassador) CalculateRevenue(db *gorm.DB) {
 		revenue += order.Total
 	}
 
-	ambassador.Revenue = &revenue
+	ambassador.Revenue = revenue
 }
