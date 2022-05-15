@@ -8,7 +8,7 @@ import (
 )
 
 func IsAuthenticated(c *fiber.Ctx) error {
-	response, err := services.UserService.Get("users/admin", c.Cookies("jwt", ""))
+	response, err := services.UserService.Get("user/admin", c.Cookies("jwt", ""))
 
 	if err != nil {
 		c.Status(fiber.StatusUnauthorized)

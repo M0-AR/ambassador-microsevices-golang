@@ -2,6 +2,7 @@ package main
 
 import (
 	"admin/src/database"
+	"admin/src/routes"
 	"admin/src/services"
 	//"admin/src/routes"
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +20,7 @@ func main() {
 		AllowCredentials: true, // Allow the frontend to get Cookies from the backend
 	}))
 
-	//routes.Setup(app)
+	routes.Setup(app)
 
 	app.Listen(":8000")
 }
