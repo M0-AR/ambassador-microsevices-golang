@@ -2,6 +2,8 @@ package main
 
 import (
 	"checkout/src/database"
+	"checkout/src/routes"
+	"checkout/src/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -9,7 +11,7 @@ import (
 func main() {
 	database.Connect()
 	database.AutoMigrate()
-	//services.Setup()
+	services.Setup()
 	//events.SetupProducer()
 
 	app := fiber.New()
@@ -18,7 +20,7 @@ func main() {
 		AllowCredentials: true, // Allow the frontend to get Cookies from the backend
 	}))
 
-	//routes.Setup(app)
+	routes.Setup(app)
 
 	app.Listen(":8000")
 }
