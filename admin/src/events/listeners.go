@@ -13,6 +13,8 @@ func Listen(message *kafka.Message) error {
 	switch key {
 	case "link_created":
 		return LinkCreated(message.Value)
+	case "order_created":
+		return OrderCreated(message.Value)
 	}
 
 	return nil
@@ -26,6 +28,20 @@ func LinkCreated(value []byte) error {
 	}
 
 	if err := database.DB.Create(&link).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func OrderCreated(value []byte) error {
+	var order models.Order
+
+	if err := json.Unmarshal(value, &order); err != nil {
+		return err
+	}
+
+	if err := database.DB.Create(&order).Error; err != nil {
 		return err
 	}
 

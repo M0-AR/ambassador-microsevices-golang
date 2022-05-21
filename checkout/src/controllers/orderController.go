@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"checkout/src/database"
+	"checkout/src/events"
 	"checkout/src/models"
 	"checkout/src/services"
 	"encoding/json"
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stripe/stripe-go/v72"
 	"github.com/stripe/stripe-go/v72/checkout/session"
@@ -170,61 +170,31 @@ func CompleteOrder(c *fiber.Ctx) error {
 	order.Complete = true
 	database.DB.Save(&order)
 
-	go func(order models.Order) {
-		ambassadorRevenue := 0.0
-		adminRevenue := 0.0
+	ambassadorRevenue := 0.0
+	adminRevenue := 0.0
 
-		for _, item := range order.OrderItems {
-			ambassadorRevenue += item.AmbassadorRevenue
-			adminRevenue += item.AdminRevenue
-		}
+	for _, item := range order.OrderItems {
+		ambassadorRevenue += item.AmbassadorRevenue
+		adminRevenue += item.AdminRevenue
+	}
 
-		response, err := services.UserService.Get(fmt.Sprintf("users/%d", order.UserId), "")
+	response, err := services.UserService.Get(fmt.Sprintf("users/%d", order.UserId), "")
 
-		if err != nil {
-			panic(err)
-		}
+	if err != nil {
+		return err
+	}
 
-		var user models.User
+	var user models.User
 
-		json.NewDecoder(response.Body).Decode(&user)
+	json.NewDecoder(response.Body).Decode(&user)
 
-		//database.Cache.ZIncrBy(context.Background(), "rankings", ambassadorRevenue, user.Name())
+	order.AmbassadorName = user.Name()
+	order.AmbassadorRevenue = ambassadorRevenue
+	order.AdminRevenue = adminRevenue
 
-		producer, err := kafka.NewProducer(&kafka.ConfigMap{
-			"bootstrap.servers": "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092",
-			"security.protocol": "SASL_SSL",
-			"sasl.username":     "63UVCVFVTBPESSWN",
-			"sasl.password":     "OxmD4lsSR8xT9CfQbjnLnaX3o1VX0W2qpyxP8YH8B/vPA4GlMHjgoV/bYTkx15Gx",
-			"sasl.mechanism":    "PLAIN",
-		})
-
-		if err != nil {
-			panic(err)
-		}
-
-		defer producer.Close()
-
-		topic := "default"
-
-		message := map[string]interface{}{
-			"id":                 order.Id,
-			"ambassador_revenue": ambassadorRevenue,
-			"admin_revenue":      adminRevenue,
-			"code":               order.Code,
-			"ambassador_email":   order.AmbassadorEmail,
-		}
-
-		value, _ := json.Marshal(message)
-
-		producer.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-			Value:          value,
-		}, nil)
-
-		// Wait for message deliveries before shutting down
-		producer.Flush(15 * 1000)
-	}(order)
+	go events.Produce("admin_topic", "order_created", order)
+	go events.Produce("ambassador_topic", "order_created", order)
+	go events.Produce("email_topic", "order_created", order)
 
 	return c.JSON(fiber.Map{
 		"message": "success",

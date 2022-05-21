@@ -13,14 +13,14 @@ services:
         - checkout
         - users
 
-#    checkout_queue:
-#      build: .
-#      command: "go run src/commands/consumer.go"
-#      depends_on:
-#        - admin_db
-#        - admin_backend
-#      networks:
-#        - checkout
+    checkout_queue:
+      build: .
+      command: "go run src/commands/consumer.go"
+      depends_on:
+        - checkout_db
+        - checkout_backend
+      networks:
+        - checkout
 
     checkout_db:
       image: mysql:8
