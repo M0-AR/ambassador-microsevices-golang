@@ -25,7 +25,7 @@ func CreateProduct(c *fiber.Ctx) error {
 
 	database.DB.Create(&product)
 
-	events.Produce("ambassador_topic", "product_created", product)
+	go events.Produce("ambassador_topic", "product_created", product)
 
 	return c.JSON(product)
 }
@@ -54,7 +54,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	database.DB.Model(&product).Updates(&product)
 
-	events.Produce("ambassador_topic", "product_updated", product)
+	go events.Produce("ambassador_topic", "product_updated", product)
 
 	return c.JSON(product)
 }
@@ -67,7 +67,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 
 	database.DB.Delete(&product)
 
-	events.Produce("ambassador_topic", "product_deleted", id)
+	go events.Produce("ambassador_topic", "product_deleted", id)
 
 	return nil
 }

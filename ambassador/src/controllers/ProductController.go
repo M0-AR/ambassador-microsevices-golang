@@ -16,23 +16,36 @@ func ProductsFrontend(c *fiber.Ctx) error {
 	var products []models.Product
 	var ctx = context.Background()
 
-	result, err := database.Cache.Get(ctx, "products_frontend").Result()
+	//TODO: There is a problem with delete cache in listeners.ProductCreated, because it should remove the old cache (but not)
+	//result, err := database.Cache.Get(ctx, "products_frontend").Result()
+	//
+	//if err != nil {
+	//	database.DB.Find(&products)
+	//
+	//	bytes, err := json.Marshal(products)
+	//
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	if errKey := database.Cache.Set(ctx, "products_frontend", bytes, 30*time.Minute).Err(); errKey != nil {
+	//		panic(errKey)
+	//	}
+	//
+	//} else {
+	//	json.Unmarshal([]byte(result), &products)
+	//}
+
+	database.DB.Find(&products)
+
+	bytes, err := json.Marshal(products)
 
 	if err != nil {
-		database.DB.Find(&products)
+		panic(err)
+	}
 
-		bytes, err := json.Marshal(products)
-
-		if err != nil {
-			panic(err)
-		}
-
-		if errKey := database.Cache.Set(ctx, "products_frontend", bytes, 30*time.Minute).Err(); errKey != nil {
-			panic(errKey)
-		}
-
-	} else {
-		json.Unmarshal([]byte(result), &products)
+	if errKey := database.Cache.Set(ctx, "products_frontend", bytes, 30*time.Minute).Err(); errKey != nil {
+		panic(errKey)
 	}
 
 	return c.JSON(products)

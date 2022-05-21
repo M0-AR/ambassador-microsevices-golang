@@ -1,7 +1,7 @@
 package models
 
 type Link struct {
-	Id       uint      `json:"id" gorm:"primaryKey; autoIncrement:false"`
+	Id       uint      `json:"id"`
 	Code     string    `json:"code"`
 	UserId   uint      `json:"user_id"`
 	Products []Product `json:"products" gorm:"many2many:link_products"`

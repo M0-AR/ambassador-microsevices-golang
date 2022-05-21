@@ -1,11 +1,16 @@
-package events
+package main
 
 import (
+	"ambassador/src/database"
+	"ambassador/src/events"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 func main() {
+	database.Connect()
+	database.SetupRedis()
+
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092",
 		"security.protocol": "SASL_SSL",
@@ -22,6 +27,8 @@ func main() {
 
 	consumer.SubscribeTopics([]string{"ambassador_topic"}, nil)
 
+	fmt.Println("Started Consuming")
+
 	for {
 		msg, err := consumer.ReadMessage(-1)
 		if err == nil {
@@ -34,7 +41,7 @@ func main() {
 
 		fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 
-		Listen(msg)
+		events.Listen(msg)
 	}
 
 	consumer.Close()

@@ -2,6 +2,7 @@ version: '3.9'
 services:
     admin_backend:
       build: .
+      command: ["air"]
       ports:
         - "8002:8000"
       volumes:
@@ -12,8 +13,17 @@ services:
         - admin
         - users
 
+    admin_queue:
+      build: .
+      command: "go run src/commands/consumer.go"
+      depends_on:
+        - admin_db
+        - admin_backend
+      networks:
+        - admin
+
     admin_db:
-      image: mysql:5.7.22
+      image: mysql:8
       restart: always
       environment:
         MYSQL_DATABASE: admin

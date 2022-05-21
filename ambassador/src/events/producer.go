@@ -10,7 +10,7 @@ var Producer *kafka.Producer
 func SetupProducer() {
 	var err error
 
-	Producer, err := kafka.NewProducer(&kafka.ConfigMap{
+	Producer, err = kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092",
 		"security.protocol": "SASL_SSL",
 		"sasl.username":     "63UVCVFVTBPESSWN",
@@ -22,7 +22,7 @@ func SetupProducer() {
 		panic(err)
 	}
 
-	defer Producer.Close()
+	//defer Producer.Close()
 }
 
 func Produce(topic, key string, message interface{}) {
