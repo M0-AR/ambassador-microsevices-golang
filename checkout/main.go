@@ -2,6 +2,7 @@ package main
 
 import (
 	"checkout/src/database"
+	"checkout/src/events"
 	"checkout/src/routes"
 	"checkout/src/services"
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +13,7 @@ func main() {
 	database.Connect()
 	database.AutoMigrate()
 	services.Setup()
-	//events.SetupProducer()
+	events.SetupProducer()
 
 	app := fiber.New()
 

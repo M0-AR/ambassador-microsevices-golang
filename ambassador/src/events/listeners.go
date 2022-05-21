@@ -77,8 +77,8 @@ type Order struct {
 	Id                uint    `json:"id"`
 	UserId            uint    `json:"user_id"` // AmbassadorId
 	Code              string  `json:"code"`
-	AmbassadorRevenue float64 `json:"ambassador_revenue"`
 	AmbassadorName    string  `json:"ambassador_name"`
+	AmbassadorRevenue float64 `json:"ambassador_revenue"`
 }
 
 func OrderCreated(value []byte) error {

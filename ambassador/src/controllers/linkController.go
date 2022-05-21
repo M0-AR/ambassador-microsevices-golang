@@ -4,6 +4,7 @@ import (
 	"ambassador/src/database"
 	"ambassador/src/events"
 	"ambassador/src/models"
+	"fmt"
 	"github.com/bxcodec/faker/v3"
 	"github.com/gofiber/fiber/v2"
 )
@@ -53,6 +54,9 @@ func Stats(c *fiber.Ctx) error {
 
 	var orders []models.Order
 
+	database.DB.Find(&orders)
+	fmt.Println(orders)
+
 	for _, link := range links {
 		database.DB.Find(&orders, &models.Order{
 			Code: link.Code,
@@ -65,9 +69,9 @@ func Stats(c *fiber.Ctx) error {
 		}
 
 		result = append(result, fiber.Map{
-			"code":    link.Code,
-			"count":   len(orders),
-			"revenue": revenue,
+			"code":        link.Code,
+			"order_count": len(orders),
+			"revenue":     revenue,
 		})
 	}
 

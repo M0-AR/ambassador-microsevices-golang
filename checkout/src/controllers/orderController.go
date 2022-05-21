@@ -31,11 +31,11 @@ func CreateOrder(c *fiber.Ctx) error {
 		return err
 	}
 
-	link := models.Link{
-		Code: request.Code,
-	}
+	var link models.Link
 
-	database.DB.First(&link)
+	database.DB.Find(&link, models.Link{
+		Code: request.Code,
+	})
 
 	response, err := services.UserService.Get(fmt.Sprintf("users/%d", link.UserId), "")
 
@@ -116,7 +116,7 @@ func CreateOrder(c *fiber.Ctx) error {
 	stripe.Key = "sk_test_51KubvkK1h0tg7ROcSlP31sAVWPSvMqk7DUc1TGcSi2vBgNf2w5a8GRYeWug5AgylrPOOQL47CCjpCo4drErtKQyR00losMbfXv"
 
 	params := stripe.CheckoutSessionParams{
-		SuccessURL:         stripe.String("http://localhost:5000/success?source={CHECKOUT_SESSION_ID"),
+		SuccessURL:         stripe.String("http://localhost:5000/success?source={CHECKOUT_SESSION_ID}"),
 		CancelURL:          stripe.String("http://localhost:5000/error"),
 		PaymentMethodTypes: stripe.StringSlice([]string{"card"}),
 		LineItems:          lineItems,

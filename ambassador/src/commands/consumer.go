@@ -32,9 +32,8 @@ func main() {
 
 	for {
 		msg, err := consumer.ReadMessage(-1)
-		if err == nil {
-			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
-		} else {
+
+		if err != nil {
 			// The client will automatically try to recover from all errors.
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 
@@ -47,7 +46,7 @@ func main() {
 			return
 		}
 
-		fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+		//fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 
 		if err := events.Listen(msg); err != nil {
 			database.DB.Create(&models.KafkaError{

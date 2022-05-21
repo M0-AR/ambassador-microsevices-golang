@@ -4,6 +4,7 @@ import (
 	"checkout/src/database"
 	"checkout/src/models"
 	"encoding/json"
+	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
@@ -34,6 +35,13 @@ func LinkCreated(value []byte) error {
 	if err := database.DB.Create(&link).Error; err != nil {
 		return err
 	}
+
+	var link1 models.Link
+	database.DB.Find(&link1, models.Link{
+		Code: link.Code,
+	})
+
+	fmt.Println(link1)
 
 	return nil
 }

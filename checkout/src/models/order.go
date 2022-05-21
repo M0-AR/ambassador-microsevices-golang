@@ -17,7 +17,7 @@ type Order struct {
 	Complete          bool        `json:"-" gorm:"default:false"`
 	Total             float64     `json:"total" gorm:"-"`
 	AmbassadorName    string      `json:"ambassador_name" gorm:"-"`
-	AmbassadorRevenue float64     `json:"ambassador_revenueRevenue" gorm:"-"`
+	AmbassadorRevenue float64     `json:"ambassador_revenue" gorm:"-"`
 	AdminRevenue      float64     `json:"admin_revenue" gorm:"-"`
 	OrderItems        []OrderItem `json:"order_items" gorm:"foreignKey:OrderId"`
 }

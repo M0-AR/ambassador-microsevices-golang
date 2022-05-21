@@ -41,10 +41,12 @@ func main() {
 		json.Unmarshal(msg.Value, &message)
 
 		ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", message["ambassador_revenue"].(float64), message["code"]))
-		smtp.SendMail("172.17.0.1:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage) // TODO: instead of 172.17.0.1 could be host.docker.internal
+		//smtp.SendMail("172.17.0.1:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage) // TODO: instead of 172.17.0.1 could be host.docker.internal
+		smtp.SendMail("0.0.0.0:1025", nil, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage) // TODO: instead of 172.17.0.1 could be host.docker.internal
 
 		adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", message["id"].(float64), message["admin_revenue"].(float64))) // TODO: instead of 172.17.0.1 could be host.docker.internal
-		smtp.SendMail("172.17.0.1:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
+		//smtp.SendMail("172.17.0.1:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
+		smtp.SendMail("0.0.0.0:1025", nil, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
 	}
 
 	consumer.Close()
