@@ -7,19 +7,27 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func Listen(message *kafka.Message) {
+func Listen(message *kafka.Message) error {
 	key := string(message.Key)
 
 	switch key {
 	case "link_created":
-		LinkCreated(message.Value)
+		return LinkCreated(message.Value)
 	}
+
+	return nil
 }
 
-func LinkCreated(value []byte) {
+func LinkCreated(value []byte) error {
 	var link models.Link
 
-	json.Unmarshal(value, &link)
+	if err := json.Unmarshal(value, &link); err != nil {
+		return err
+	}
 
-	database.DB.Create(&link)
+	if err := database.DB.Create(&link).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

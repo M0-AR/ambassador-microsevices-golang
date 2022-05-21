@@ -3,6 +3,7 @@ package main
 import (
 	"ambassador/src/database"
 	"ambassador/src/events"
+	"ambassador/src/models"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -36,12 +37,25 @@ func main() {
 		} else {
 			// The client will automatically try to recover from all errors.
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
+
+			database.DB.Create(&models.KafkaError{
+				Key:   msg.Key,
+				Value: msg.Value,
+				Error: err,
+			})
+
 			return
 		}
 
 		fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 
-		events.Listen(msg)
+		if err := events.Listen(msg); err != nil {
+			database.DB.Create(&models.KafkaError{
+				Key:   msg.Key,
+				Value: msg.Value,
+				Error: err,
+			})
+		}
 	}
 
 	consumer.Close()
