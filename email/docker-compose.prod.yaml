@@ -1,0 +1,18 @@
+version: '3'
+services:
+    email_backend:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: email:0.0.1
+      environment:
+         BOOTSTRAP_SERVERS: pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092
+         SECURITY_PROTOCOL: SASL_SSL
+         SASL_USERNAME: 63UVCVFVTBPESSWN
+         SASL_PASSWORD: OxmD4lsSR8xT9CfQbjnLnaX3o1VX0W2qpyxP8YH8B/vPA4GlMHjgoV/bYTkx15Gx
+         SASL_MECHANISM: PLAIN
+         KAFKA_TOPIC: "email_topic"
+         EMAIL_HOST: smtp.mailtrap.io
+         EMAIL_PORT: 2525
+         EMAIL_USERNAME: 5720b5702f4ed9
+         EMAIL_PASSWORD: 721e8c0f988fa9
