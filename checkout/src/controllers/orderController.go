@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stripe/stripe-go/v72"
 	"github.com/stripe/stripe-go/v72/checkout/session"
+	"os"
 )
 
 type CreateOrderRequest struct {
@@ -113,11 +114,11 @@ func CreateOrder(c *fiber.Ctx) error {
 		})
 	}
 
-	stripe.Key = "sk_test_51KubvkK1h0tg7ROcSlP31sAVWPSvMqk7DUc1TGcSi2vBgNf2w5a8GRYeWug5AgylrPOOQL47CCjpCo4drErtKQyR00losMbfXv"
+	stripe.Key = os.Getenv("STRIPE_KEY")
 
 	params := stripe.CheckoutSessionParams{
-		SuccessURL:         stripe.String("http://localhost:5000/success?source={CHECKOUT_SESSION_ID}"),
-		CancelURL:          stripe.String("http://localhost:5000/error"),
+		SuccessURL:         stripe.String(fmt.Sprintf("%s/success?source={CHECKOUT_SESSION_ID}", os.Getenv("CHECKOUT_URL"))),
+		CancelURL:          stripe.String(fmt.Sprintf("%s/error", os.Getenv("CHECKOUT_URL"))),
 		PaymentMethodTypes: stripe.StringSlice([]string{"card"}),
 		LineItems:          lineItems,
 	}

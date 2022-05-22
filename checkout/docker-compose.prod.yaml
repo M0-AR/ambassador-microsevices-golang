@@ -1,0 +1,33 @@
+version: '3'
+services:
+    checkout_backend:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: checkout:0.0.1
+      command: "go run main.go"
+      ports:
+        - "8004:8000"
+      environment:
+        DB_HOST: 35.246.243.59
+        DB_PORT: 3306
+        DB_DATABASE: checkout
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000
+        STRIP_KEY: sk_test_51KubvkK1h0tg7ROcSlP31sAVWPSvMqk7DUc1TGcSi2vBgNf2w5a8GRYeWug5AgylrPOOQL47CCjpCo4drErtKQyR00losMbfXv
+        CHECKOUT_URL: http://localhost:5000
+
+    checkout_queue:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: checkout:0.0.1
+      command: "go run src/commands/consumer.go"
+      environment:
+        DB_HOST: 35.246.243.59
+        DB_PORT: 3306
+        DB_DATABASE: checkout
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000

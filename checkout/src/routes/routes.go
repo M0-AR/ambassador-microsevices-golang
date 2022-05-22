@@ -6,6 +6,10 @@ import (
 )
 
 func Setup(app *fiber.App) {
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON("OK")
+	})
+
 	api := app.Group("api/checkout")
 	api.Get("links/:code", controllers.GetLink)
 	api.Post("orders", controllers.CreateOrder)
