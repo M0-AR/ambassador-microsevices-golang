@@ -22,3 +22,10 @@ spec:
                 name: ambassador-backend
                 port:
                   number: 8003
+          - path: /api/checkout/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: checkout-backend
+                port:
+                  number: 8004
