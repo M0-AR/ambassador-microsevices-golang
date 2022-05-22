@@ -1,9 +1,13 @@
 package services
 
-import "github.com/M0-AR/go-user-service"
+import (
+	"fmt"
+	"github.com/M0-AR/go-user-service"
+	"os"
+)
 
 var UserService services.Service
 
 func Setup() {
-	UserService = services.CreateService("http://users-ms:8000/api/")
+	UserService = services.CreateService(fmt.Sprintf("%s/api/", os.Getenv("USERS_MS")))
 }

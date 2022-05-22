@@ -1,0 +1,36 @@
+version: '3'
+services:
+    ambassador_backend:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: ambassador:0.0.1
+      command: "go run main.go"
+      ports:
+        - "8003:8000"
+      environment:
+        DB_HOST: 35.198.150.134
+        DB_PORT: 3306
+        DB_DATABASE: ambassador
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000
+
+    ambassador_queue:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: ambassador:0.0.1
+      command: "go run src/commands/consumer.go"
+      environment:
+        DB_HOST: 35.198.150.134
+        DB_PORT: 3306
+        DB_DATABASE: ambassador
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000
+
+    redis:
+      image: redis:latest
+      ports:
+        - "6379:6379"

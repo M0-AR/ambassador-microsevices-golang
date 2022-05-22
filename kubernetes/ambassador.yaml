@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ambassador-backend
+  name: ambassador-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ambassador-backend
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ambassador-backend
+    spec:
+      containers:
+        - args:
+            - go
+            - run
+            - main.go
+          env:
+            - name: DB_DATABASE
+              value: ambassador
+            - name: DB_HOST
+              value: 35.198.150.134
+            - name: DB_PASSWORD
+              value: root
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USERNAME
+              value: root
+            - name: USERS_MS
+              value: http://users-ms:8000
+          image: ambassador:0.0.1
+          name: ambassador-backend
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ambassador-queue
+  name: ambassador-queue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ambassador-queue
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ambassador-queue
+    spec:
+      containers:
+        - args:
+            - go
+            - run
+            - src/commands/consumer.go
+          env:
+            - name: DB_DATABASE
+              value: ambassador
+            - name: DB_HOST
+              value: 35.198.150.134
+            - name: DB_PASSWORD
+              value: root
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USERNAME
+              value: root
+            - name: USERS_MS
+              value: http://users-ms:8000
+          image: ambassador:0.0.1
+          name: ambassador-queue
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: ambassador-backend
+  name: ambassador-backend
+spec:
+  ports:
+    - name: "8003"
+      port: 8003
+      targetPort: 8000
+  selector:
+    io.kompose.service: ambassador-backend
