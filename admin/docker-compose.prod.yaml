@@ -1,0 +1,31 @@
+version: '3'
+services:
+    admin_backend:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: admin:0.0.2
+      command: "go run main.go"
+      ports:
+        - "8002:8000"
+      environment:
+        DB_HOST: 34.141.60.249
+        DB_PORT: 3306
+        DB_DATABASE: admin
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000
+
+    admin_queue:
+      build:
+        context: .
+        dockerfile: prod.dockerfile
+      image: admin:0.0.2
+      command: "go run src/commands/consumer.go"
+      environment:
+        DB_HOST: 34.141.60.249
+        DB_PORT: 3306
+        DB_DATABASE: admin
+        DB_USERNAME: root
+        DB_PASSWORD: root
+        USERS_MS: http://users-ms:8000

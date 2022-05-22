@@ -7,6 +7,10 @@ import (
 )
 
 func Setup(app *fiber.App) {
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON("OK")
+	})
+
 	api := app.Group("api/admin")
 
 	api.Post("register", controllers.Register)
