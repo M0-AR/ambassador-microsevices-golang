@@ -53,3 +53,10 @@ spec:
               value: SASL_SSL
           image: md0ar/email:0.0.1
           name: email-backend
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
