@@ -23,16 +23,25 @@ spec:
             - name: DB_DATABASE
               value: ambassador
             - name: DB_HOST
-              value: 35.198.150.134
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_HOST
             - name: DB_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: DB_PASSWORD
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              value: root
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_USERNAME
             - name: USERS_MS
               value: http://users-ms:8000
-          image: ambassador:0.0.1
+          image: ghcr.io/m0-ar/ambassador-ambassador:1.0.0
           name: ambassador-backend
           ports:
             - containerPort: 8000
@@ -64,21 +73,30 @@ spec:
         - args:
             - go
             - run
-            - src/commands/consumer.go
+            - ./src/commands/consumer
           env:
             - name: DB_DATABASE
               value: ambassador
             - name: DB_HOST
-              value: 35.198.150.134
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_HOST
             - name: DB_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: DB_PASSWORD
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              value: root
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_USERNAME
             - name: USERS_MS
               value: http://users-ms:8000
-          image: ambassador:0.0.1
+          image: ghcr.io/m0-ar/ambassador-ambassador:1.0.0
           name: ambassador-queue
           resources:
             requests:

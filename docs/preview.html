@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ambassador — open-source ambassador &amp; affiliate infrastructure</title>
+  <meta name="description" content="A production-shaped, open-source reference for creator and ambassador programs: five Go services, event-driven commission attribution, Stripe Checkout payments, and a fully clickable product demo.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Ambassador — open-source ambassador & affiliate infrastructure">
+  <meta property="og:description" content="Five Go services, event-driven commissions, Stripe Checkout payments. Explore the product demo, a 3D neural-network explainer, a quiz, and an ROI calculator.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#080b0a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/landing.css">
+</head>
+<body class="landing">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="site-header">
+    <div class="wrap">
+      <a class="landing-brand" href="preview.html" aria-label="Ambassador home">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+        </span>
+        <span>Ambassador<small>open-source demo</small></span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Sections">
+        <a href="#demo">Live demo</a>
+        <a href="#game">Neural game</a>
+        <a href="#learn">Learn</a>
+        <a href="#roi">ROI</a>
+        <a href="#architecture">Architecture</a>
+      </nav>
+
+      <a class="header-cta" href="https://github.com/M0-AR/ambassador-microsevices-golang" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        <span>GitHub</span>
+      </a>
+
+      <button class="theme-button" id="theme-button" type="button" aria-label="Toggle light and dark theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+      </button>
+
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-controls="site-nav" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span>Open-source affiliate infrastructure</span>
+          <h1>Your best customers are your best <em>salespeople.</em></h1>
+          <p class="lede">A <strong>production-shaped, open-source reference</strong> for running creator and ambassador programs: five Go services, event-driven commission attribution, Stripe Checkout payments, and a product demo you can click through in your browser.</p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo">
+              Explore the live demo
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn" href="https://github.com/M0-AR/ambassador-microsevices-golang#-beginner-guide--read-this-and-you-are-a-professional" rel="noopener">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 5.5v15"/></svg>
+              Read the beginner guide
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <div><strong>5</strong><span>Go services</span></div>
+            <div><strong>Kafka</strong><span>Event-driven</span></div>
+            <div><strong>Stripe Checkout</strong><span>Payment sessions</span></div>
+            <div><strong>MIT</strong><span>Licensed</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="glow"></div>
+          <div class="orbit-badge"><span class="pulse"></span>Order NS-10503 attributed to Maya Chen</div>
+
+          <div class="device">
+            <div class="device-bar"><i></i><i></i><i></i><span>northstar.supply · ambassador dashboard</span></div>
+            <div class="hero-shot">
+              <div class="shot-kpis">
+                <div><small>Attributed GMV</small><strong>$116.6K</strong><em>↑ 8.8%</em></div>
+                <div><small>Orders</small><strong>1,454</strong><em>↑ 9.5%</em></div>
+                <div><small>Commission</small><strong>$11.7K</strong><em>↑ 8.7%</em></div>
+              </div>
+              <div class="shot-chart">
+                <header><strong>Revenue from ambassador links</strong><span>Last 30 days</span></header>
+                <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="hero-line" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#7ee2b8" stop-opacity="0.28"/>
+                      <stop offset="100%" stop-color="#7ee2b8" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 74 C22 70 34 60 52 62 C70 64 78 48 98 50 C118 52 126 40 146 44 C166 48 176 30 196 34 C216 38 226 26 246 30 C266 34 280 18 302 22 L320 20 L320 96 L0 96 Z" fill="url(#hero-line)"/>
+                  <path d="M0 74 C22 70 34 60 52 62 C70 64 78 48 98 50 C118 52 126 40 146 44 C166 48 176 30 196 34 C216 38 226 26 246 30 C266 34 280 18 302 22 L320 20" fill="none" stroke="#7ee2b8" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="302" cy="22" r="3" fill="#7ee2b8"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="float-card">
+            <small>Commission this order</small>
+            <strong>$17.76</strong>
+            <p>12% of a $148 order, attributed to Maya Chen</p>
+            <div class="split"><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">01 — Live product demo</div>
+            <h2>Click through the product, <em>right here.</em></h2>
+          </div>
+          <p>Nine connected screens, running as real HTML and CSS. Every tab loads the actual demo page in an iframe — no screenshots pretending to be software.</p>
+        </div>
+
+        <div class="demo-panel reveal">
+          <div class="demo-tabs" role="tablist" aria-label="Product screens" id="demo-tabs"></div>
+
+          <div class="browser">
+            <div class="browser-bar">
+              <div class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="browser-url">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span id="demo-url">m0-ar.github.io/ambassador-microsevices-golang/app/dashboard.html</span>
+              </div>
+              <div class="browser-actions">
+                <a id="demo-full" href="app/dashboard.html" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-8 8M10 20H4v-6M4 20l8-8"/></svg>
+                  <span>Open full screen</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="demo-stage" id="demo-stage">
+              <iframe id="demo-frame" title="Ambassador product demo — dashboard screen" loading="lazy"></iframe>
+              <div class="demo-loading hidden" id="demo-loading" role="status">
+                <div class="spinner" aria-hidden="true"></div>
+                <span>Loading the live screen…</span>
+              </div>
+              <div class="demo-poster" id="demo-poster">
+                <div class="demo-poster-inner">
+                  <span class="poster-label"><i aria-hidden="true"></i>Interactive demo</span>
+                  <h3 id="poster-title">Start with the dashboard.</h3>
+                  <p id="poster-copy">Nine screens of a fictional store running an ambassador program. Sample data, real interactions, zero requests to a server.</p>
+                  <button class="btn btn-primary" type="button" id="demo-launch">Launch interactive demo</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-caption">
+              <p id="demo-caption-text"><strong>Dashboard</strong> — see attributed revenue, top ambassadors, and the latest orders at a glance.</p>
+              <a class="btn btn-ghost" href="app/index.html" target="_top">Browse all pages →</a>
+            </div>
+          </div>
+        </div>
+
+        <p class="demo-footnote">The demo is a front-end simulation with sample data stored in your browser. The Go services in the repository are real code — see <a href="#architecture" style="color:var(--mint)">the architecture</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="game">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">02 — Learn by growing one</div>
+            <h2>Grow a neural network. <em>Hear it explain itself.</em></h2>
+          </div>
+          <p>Every recommendation model starts as a few dots and lines. Add layers, wire them up, and let the narrator walk you through what each part does. Flip on sound for the full effect.</p>
+        </div>
+
+        <div class="game-panel reveal">
+          <div class="game-stage">
+            <canvas id="neural-canvas" aria-label="Interactive 3D neural network" role="img"></canvas>
+            <span class="stage-tag"><i aria-hidden="true"></i>Live simulation</span>
+            <div class="layer-labels" id="layer-labels" aria-hidden="true"></div>
+            <div class="no-webgl" id="no-webgl" hidden>WebGL isn't available in this browser, so the 3D scene is paused. The narration still works — press "Grow network".</div>
+          </div>
+
+          <div class="game-side">
+            <div class="game-side-head">
+              <div class="eyebrow">Synapse · interactive explainer</div>
+              <h3>A network that earns its keep</h3>
+              <p>Watch it assemble, one concept at a time.</p>
+            </div>
+
+            <div class="game-narration" id="game-log" aria-live="polite"></div>
+
+            <div class="game-controls">
+              <div class="game-progress">
+                <div class="track"><i id="game-bar"></i></div>
+                <span id="game-progress-label">0 / 6</span>
+              </div>
+              <div class="game-buttons">
+                <button class="btn btn-primary" type="button" id="game-grow">Grow network</button>
+                <button class="btn" type="button" id="game-reset" aria-label="Reset the neural network">Reset</button>
+                <button class="icon-btn" type="button" id="game-narrate" aria-pressed="false" aria-label="Enable narration">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+                </button>
+              </div>
+              <p class="game-hint">Drag to rotate · scroll to zoom · every step is narrated</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="learn">
+      <div class="wrap">
+        <div class="section-head center reveal">
+          <div>
+            <div class="eyebrow">03 — Zero to hero</div>
+            <h2>Six questions. <em>One working mental model.</em></h2>
+          </div>
+          <p>No sign-up, no scoreboard, no guilt. Just the handful of ideas that make the architecture click — with an explanation after every answer.</p>
+        </div>
+
+        <div class="quiz-panel reveal">
+          <div class="quiz-head">
+            <strong id="quiz-title">The ambassador stack, explained</strong>
+            <div class="quiz-dots" id="quiz-dots" aria-hidden="true"></div>
+          </div>
+          <div class="quiz-body" id="quiz-body">
+            <noscript><p style="font-size:12px;color:var(--muted)">The quiz needs JavaScript. The README explains the same concepts in text.</p></noscript>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="roi">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">04 — Business case</div>
+            <h2>What could a program <em>actually</em> return?</h2>
+          </div>
+          <p>Move the sliders to model attributed revenue and commission cost. The math is deliberately simple and clearly labeled — no fantasy growth curves.</p>
+        </div>
+
+        <div class="roi-panel reveal">
+          <form class="roi-form" id="roi-form" onsubmit="return false">
+            <div class="roi-field">
+              <label for="roi-revenue">Monthly store revenue <output id="roi-revenue-out">$120,000</output></label>
+              <input type="range" id="roi-revenue" min="20000" max="600000" step="5000" value="120000" aria-describedby="roi-revenue-help">
+              <small id="roi-revenue-help">Total revenue across all channels, per month.</small>
+            </div>
+            <div class="roi-field">
+              <label for="roi-aov">Average order value <output id="roi-aov-out">$92</output></label>
+              <input type="range" id="roi-aov" min="30" max="400" step="1" value="92">
+              <small>Used to translate revenue into an order count.</small>
+            </div>
+            <div class="roi-field">
+              <label for="roi-share">Revenue from ambassadors <output id="roi-share-out">30%</output></label>
+              <input type="range" id="roi-share" min="5" max="65" step="1" value="30">
+              <small>Share of monthly revenue attributed to ambassador links.</small>
+            </div>
+            <div class="roi-field">
+              <label for="roi-rate">Commission rate <output id="roi-rate-out">10%</output></label>
+              <input type="range" id="roi-rate" min="5" max="30" step="1" value="10">
+              <small>What the ambassador earns on attributed orders.</small>
+            </div>
+          </form>
+
+          <div class="roi-results">
+            <div class="roi-big">
+              <small>Revenue attributed to ambassadors</small>
+              <strong id="roi-gmv">$36,000</strong>
+              <p id="roi-orders">≈ 391 attributed orders per month</p>
+            </div>
+            <div class="roi-grid">
+              <div>
+                <small>Commission paid</small>
+                <strong class="neg" id="roi-commission">$3,600</strong>
+              </div>
+              <div>
+                <small>Revenue kept</small>
+                <strong class="pos" id="roi-kept">$32,400</strong>
+              </div>
+              <div>
+                <small>Cost as % of total revenue</small>
+                <strong id="roi-cost">10.0%</strong>
+              </div>
+              <div>
+                <small>Revenue per ambassador dollar</small>
+                <strong id="roi-return">$10.00</strong>
+              </div>
+            </div>
+            <p class="roi-note">Illustrative arithmetic only. It doesn't model product costs, refunds, taxes, recruiting spend, or halo effects — the dashboard in the demo is sample data, not a forecast.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">05 — System map</div>
+            <h2>Five services. <em>One event bus.</em></h2>
+          </div>
+          <p>Click any box to see what it owns and which events it publishes or consumes. This mirrors the Go code in the repository — the demo site itself is a separate static front end.</p>
+        </div>
+
+        <div class="arch-panel reveal">
+          <div class="arch-canvas" id="arch-canvas"></div>
+          <div class="arch-detail" id="arch-detail">
+            <div>
+              <h3 id="arch-title">Checkout service</h3>
+              <div class="role" id="arch-role">Converts carts into orders</div>
+              <p id="arch-copy">Validates the cart, applies the referral link and a flat 10% commission split, writes the order, and starts the Stripe Checkout flow. Select another node to compare responsibilities.</p>
+            </div>
+            <div class="facts" id="arch-facts"></div>
+          </div>
+        </div>
+
+        <p class="arch-note">The public API contract lives in <code>docs/openapi.yaml</code>; deployment manifests are in <code>kubernetes/</code>. Select a node to read its role.</p>
+      </div>
+    </section>
+
+    <section class="section" id="honesty">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">06 — Read this before you star it</div>
+            <h2>What is real, and <em>what is a demo.</em></h2>
+          </div>
+          <p>Trust is a feature. This repository is honest about the line between working code and a scripted product tour.</p>
+        </div>
+
+        <div class="honesty reveal">
+          <div class="honesty-col real">
+            <h3><span class="tag" aria-hidden="true">✓</span>Real in this repository</h3>
+            <ul>
+              <li>Five Go services with HTTP handlers, MySQL repositories, JWT auth, and Kafka producers and consumers.</li>
+              <li>Stripe Checkout payment sessions wired through environment variables — test mode by default. Each order line records a flat 10% ambassador split.</li>
+              <li>Dockerfiles, Compose files, Kubernetes manifests, OpenAPI contracts, and CI workflows you can build and run.</li>
+              <li>A written beginner guide that explains every concept from first principles.</li>
+            </ul>
+          </div>
+          <div class="honesty-col sim">
+            <h3><span class="tag" aria-hidden="true">◦</span>Simulated on this page</h3>
+            <ul>
+              <li>The dashboard, storefront, orders, and payouts in the demo are a client-side simulation with sample data in localStorage.</li>
+              <li>Tiered commission rates and payout transfers are demo-only: the Go services implement a flat 10% split and no Connect transfers yet.</li>
+              <li>No demo interaction calls a Go service, charges a card, or sends an email.</li>
+              <li>The neural-network scene is a conceptual illustration, not a trained model.</li>
+              <li>The ROI numbers are plain arithmetic — included to make the business model legible, not to promise outcomes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="landing-brand" href="preview.html" aria-label="Ambassador home">
+            <span class="mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+            </span>
+            <span>Ambassador<small>open-source demo</small></span>
+          </a>
+          <p>An open-source reference implementation for affiliate and ambassador programs, built to be read as much as run. MIT licensed.</p>
+        </div>
+
+        <div class="footer-links">
+          <div>
+            <strong>Explore</strong>
+            <a href="#demo">Live product demo</a>
+            <a href="#game">Neural network game</a>
+            <a href="#learn">Zero-to-hero quiz</a>
+            <a href="#roi">ROI calculator</a>
+          </div>
+          <div>
+            <strong>Project</strong>
+            <a href="https://github.com/M0-AR/ambassador-microsevices-golang" rel="noopener">GitHub repository</a>
+            <a href="https://github.com/M0-AR/ambassador-microsevices-golang#readme" rel="noopener">README</a>
+            <a href="https://github.com/M0-AR/ambassador-microsevices-golang/blob/main/LICENSE" rel="noopener">MIT license</a>
+            <a href="https://github.com/M0-AR/ambassador-microsevices-golang/security" rel="noopener">Security policy</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-base">
+        <span>Built by M0-AR · Sample data only · No tracking, no cookies, no network calls from the demo.</span>
+        <span>Ambassador v1.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="assets/landing.js"></script>
+  <script type="module" src="assets/game.js"></script>
+</body>
+</html>

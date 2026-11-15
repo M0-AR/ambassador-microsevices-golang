@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/M0-AR/ambassador-microsevices-golang/discussions
+    about: Ask about architecture, deployment, or how to use the project.
+  - name: Report a security vulnerability
+    url: https://github.com/M0-AR/ambassador-microsevices-golang/security/advisories/new
+    about: Report vulnerabilities privately. Do not open a public issue.
+  - name: Read the beginner guide
+    url: https://github.com/M0-AR/ambassador-microsevices-golang#-beginner-guide--read-this-and-you-are-a-professional
+    about: Start here if you are new to microservices or affiliate programs.

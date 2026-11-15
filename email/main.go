@@ -23,6 +23,8 @@ func main() {
 		panic(err)
 	}
 
+	defer consumer.Close()
+
 	consumer.SubscribeTopics([]string{os.Getenv("KAFKA_TOPIC")}, nil)
 
 	for {
@@ -44,12 +46,10 @@ func main() {
 
 		auth := smtp.PlainAuth("", os.Getenv("EMAIL_USERNAME"), os.Getenv("EMAIL_PASSWORD"), host)
 
-		ambassadorMessage := []byte(fmt.Sprintf("You earned $%f from the link #%s", message["ambassador_revenue"].(float64), message["code"]))
+		ambassadorMessage := []byte(fmt.Sprintf("You earned $%.2f from the link #%s", message["ambassador_revenue"].(float64), message["code"]))
 		smtp.SendMail(host+":"+port, auth, "no-reply@email.com", []string{message["ambassador_email"].(string)}, ambassadorMessage) // TODO: instead of 172.17.0.1 could be host.docker.internal
 
-		adminMessage := []byte(fmt.Sprintf("Order #%d with a total of $%f has been completed", message["id"].(float64), message["admin_revenue"].(float64))) // TODO: instead of 172.17.0.1 could be host.docker.internal
+		adminMessage := []byte(fmt.Sprintf("Order #%.0f with a total of $%.2f has been completed", message["id"].(float64), message["admin_revenue"].(float64))) // TODO: instead of 172.17.0.1 could be host.docker.internal
 		smtp.SendMail(host+":"+port, auth, "no-reply@email.com", []string{"admin@admin.com"}, adminMessage)
 	}
-
-	consumer.Close()
 }

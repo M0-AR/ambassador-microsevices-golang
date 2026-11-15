@@ -15,7 +15,7 @@ services:
 
     admin_queue:
       build: .
-      command: "go run src/commands/consumer.go"
+      command: "go run ./src/commands/consumer"
       depends_on:
         - admin_db
         - admin_backend

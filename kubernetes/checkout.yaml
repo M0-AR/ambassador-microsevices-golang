@@ -26,18 +26,30 @@ spec:
             - name: DB_DATABASE
               value: checkout
             - name: DB_HOST
-              value: 35.246.243.59
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_HOST
             - name: DB_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: DB_PASSWORD
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              value: root
-            - name: STRIP_KEY
-              value: sk_test_51KubvkK1h0tg7ROcSlP31sAVWPSvMqk7DUc1TGcSi2vBgNf2w5a8GRYeWug5AgylrPOOQL47CCjpCo4drErtKQyR00losMbfXv
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_USERNAME
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: STRIPE_KEY
             - name: USERS_MS
               value: http://users-ms:8000
-          image: checkout:0.0.1
+          image: ghcr.io/m0-ar/ambassador-checkout:1.0.0
           name: checkout-backend
           ports:
             - containerPort: 8000
@@ -69,21 +81,30 @@ spec:
         - args:
             - go
             - run
-            - src/commands/consumer.go
+            - ./src/commands/consumer
           env:
             - name: DB_DATABASE
               value: checkout
             - name: DB_HOST
-              value: 35.246.243.59
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_HOST
             - name: DB_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: DB_PASSWORD
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              value: root
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_USERNAME
             - name: USERS_MS
               value: http://users-ms:8000
-          image: checkout:0.0.1
+          image: ghcr.io/m0-ar/ambassador-checkout:1.0.0
           name: checkout-queue
           resources:
             requests:

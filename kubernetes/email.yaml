@@ -51,7 +51,7 @@ spec:
                   key: SASL_USERNAME
             - name: SECURITY_PROTOCOL
               value: SASL_SSL
-          image: md0ar/email:0.0.1
+          image: ghcr.io/m0-ar/ambassador-email:1.0.0
           name: email-backend
           resources:
             requests:

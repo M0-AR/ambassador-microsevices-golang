@@ -16,7 +16,7 @@ services:
 
     ambassador_queue:
       build: .
-      command: "go run src/commands/consumer.go"
+      command: "go run ./src/commands/consumer"
       depends_on:
         - ambassador_db
         - ambassador_backend

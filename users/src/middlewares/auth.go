@@ -1,15 +1,24 @@
 package middlewares
 
 import (
-	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/gofiber/fiber/v2"
+	jwt "github.com/golang-jwt/jwt/v4"
+	"log"
+	"os"
 	"strconv"
 	"time"
 	"users/src/database"
 	"users/src/models"
 )
 
-const SecretKey = "secret"
+func secretKey() []byte {
+	if value := os.Getenv("JWT_SECRET"); value != "" {
+		return []byte(value)
+	}
+
+	log.Println("warning: JWT_SECRET is not set; using an insecure development default")
+	return []byte("secret")
+}
 
 type ClaimsWithScope struct {
 	jwt.RegisteredClaims
@@ -20,7 +29,7 @@ func IsAuthenticated(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &ClaimsWithScope{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return secretKey(), nil
 	})
 
 	if err != nil || !token.Valid {
@@ -61,5 +70,5 @@ func GenerateJWT(id uint, scope string) (string, error) {
 	payload.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Hour * 24)) // One day
 	payload.Scope = scope
 
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, payload).SignedString([]byte(SecretKey))
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, payload).SignedString(secretKey())
 }

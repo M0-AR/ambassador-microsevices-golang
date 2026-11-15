@@ -15,7 +15,7 @@ services:
 
     checkout_queue:
       build: .
-      command: "go run src/commands/consumer.go"
+      command: "go run ./src/commands/consumer"
       depends_on:
         - checkout_db
         - checkout_backend

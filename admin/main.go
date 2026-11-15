@@ -7,6 +7,7 @@ import (
 	"admin/src/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"os"
 )
 
 func main() {
@@ -23,5 +24,13 @@ func main() {
 
 	routes.Setup(app)
 
-	app.Listen(":8000")
+	app.Listen(":" + port())
+}
+
+func port() string {
+	if value := os.Getenv("PORT"); value != "" {
+		return value
+	}
+
+	return "8000"
 }

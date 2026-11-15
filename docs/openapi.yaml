@@ -1,0 +1,995 @@
+openapi: 3.0.3
+info:
+  title: Ambassador API
+  version: 1.0.0
+  description: |
+    The ambassador platform exposes four HTTP services and one Kafka consumer.
+    Each path below is served by the service named in its tag.
+
+    Local ports: Users `8001`, Admin `8002`, Ambassador `8003`, Checkout `8004`.
+    Inside containers every service listens on `8000`; set `PORT` to override.
+
+    Authentication is an HTTP-only `jwt` cookie issued by the Users service.
+    Admin and Ambassador verify the cookie by calling the Users service.
+  contact:
+    name: M0-AR
+    url: https://github.com/M0-AR/ambassador-microsevices-golang
+  license:
+    name: MIT
+    url: https://github.com/M0-AR/ambassador-microsevices-golang/blob/main/LICENSE
+servers:
+  - url: http://localhost:8001
+    description: Users service
+  - url: http://localhost:8002
+    description: Admin service
+  - url: http://localhost:8003
+    description: Ambassador service
+  - url: http://localhost:8004
+    description: Checkout service
+security:
+  - cookieAuth: []
+tags:
+  - name: Users
+    description: Accounts, login, JWT issuance, profiles.
+  - name: Admin
+    description: Catalog management, creator and order views.
+  - name: Ambassador
+    description: Creator accounts, referral links, stats, rankings.
+  - name: Checkout
+    description: Link resolution, orders, commission split, Stripe Checkout.
+paths:
+  /api/register:
+    post:
+      tags: [Users]
+      summary: Register an account
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/login:
+    post:
+      tags: [Users]
+      summary: Log in and set the jwt cookie
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Logged in; the response sets the `jwt` cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/users:
+    get:
+      tags: [Users]
+      summary: List users
+      operationId: listUsers
+      security: []
+      responses:
+        '200':
+          description: All users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /api/users/{id}:
+    get:
+      tags: [Users]
+      summary: Fetch one user
+      operationId: getUser
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/user/{scope}:
+    get:
+      tags: [Users]
+      summary: Current user for a scope
+      operationId: currentUser
+      parameters:
+        - name: scope
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [admin, ambassador]
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/logout:
+    post:
+      tags: [Users]
+      summary: Invalidate the stored token
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Cookie cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/users/info:
+    put:
+      tags: [Users]
+      summary: Update the current profile
+      operationId: updateUserInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInfoRequest'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/users/password:
+    put:
+      tags: [Users]
+      summary: Change the current password
+      operationId: updateUserPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordRequest'
+      responses:
+        '200':
+          description: Password updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/register:
+    post:
+      tags: [Admin]
+      summary: Register an admin
+      operationId: registerAdmin
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Created admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/admin/login:
+    post:
+      tags: [Admin]
+      summary: Log in as an admin
+      operationId: loginAdmin
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Logged in; sets the jwt cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/user:
+    get:
+      tags: [Admin]
+      summary: Current admin
+      operationId: currentAdmin
+      responses:
+        '200':
+          description: Current admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/logout:
+    post:
+      tags: [Admin]
+      summary: Log out
+      operationId: logoutAdmin
+      responses:
+        '200':
+          description: Cookie cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/users/info:
+    put:
+      tags: [Admin]
+      summary: Update the admin profile
+      operationId: updateAdminInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInfoRequest'
+      responses:
+        '200':
+          description: Updated admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/users/password:
+    put:
+      tags: [Admin]
+      summary: Change the admin password
+      operationId: updateAdminPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordRequest'
+      responses:
+        '200':
+          description: Password updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/ambassadors:
+    get:
+      tags: [Admin]
+      summary: List creators
+      operationId: listAmbassadors
+      responses:
+        '200':
+          description: Creators
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/products:
+    get:
+      tags: [Admin]
+      summary: List products
+      operationId: listAdminProducts
+      responses:
+        '200':
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Admin]
+      summary: Create a product
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Created product; publishes product_created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/products/{id}:
+    get:
+      tags: [Admin]
+      summary: Fetch a product
+      operationId: getAdminProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Admin]
+      summary: Update a product
+      operationId: updateProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Updated product; publishes product_updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags: [Admin]
+      summary: Delete a product
+      operationId: deleteProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Deleted; publishes product_deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/users/{id}/links:
+    get:
+      tags: [Admin]
+      summary: List links for one creator
+      operationId: listCreatorLinks
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Links
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/admin/orders:
+    get:
+      tags: [Admin]
+      summary: List orders
+      operationId: listOrders
+      responses:
+        '200':
+          description: Orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/register:
+    post:
+      tags: [Ambassador]
+      summary: Register a creator
+      operationId: registerAmbassador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Created creator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/ambassador/login:
+    post:
+      tags: [Ambassador]
+      summary: Log in as a creator
+      operationId: loginAmbassador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Logged in; sets the jwt cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/products/frontend:
+    get:
+      tags: [Ambassador]
+      summary: Storefront catalog
+      operationId: frontendProducts
+      security: []
+      responses:
+        '200':
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /api/ambassador/products/backend:
+    get:
+      tags: [Ambassador]
+      summary: Creator catalog
+      operationId: backendProducts
+      security: []
+      responses:
+        '200':
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /api/ambassador/user:
+    get:
+      tags: [Ambassador]
+      summary: Current creator
+      operationId: currentAmbassador
+      responses:
+        '200':
+          description: Current creator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/logout:
+    post:
+      tags: [Ambassador]
+      summary: Log out
+      operationId: logoutAmbassador
+      responses:
+        '200':
+          description: Cookie cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/users/info:
+    put:
+      tags: [Ambassador]
+      summary: Update the creator profile
+      operationId: updateAmbassadorInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInfoRequest'
+      responses:
+        '200':
+          description: Updated creator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/users/password:
+    put:
+      tags: [Ambassador]
+      summary: Change the creator password
+      operationId: updateAmbassadorPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordRequest'
+      responses:
+        '200':
+          description: Password updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/links:
+    post:
+      tags: [Ambassador]
+      summary: Create a referral link
+      operationId: createLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLinkRequest'
+      responses:
+        '200':
+          description: Created link; publishes link_created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/stats:
+    get:
+      tags: [Ambassador]
+      summary: Revenue and order counts for each of the creator's links
+      operationId: ambassadorStats
+      responses:
+        '200':
+          description: One entry per link
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LinkStat'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/ambassador/rankings:
+    get:
+      tags: [Ambassador]
+      summary: Redis-backed leaderboard
+      operationId: ambassadorRankings
+      responses:
+        '200':
+          description: Map of creator name to score
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RankingMap'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/checkout/links/{code}:
+    get:
+      tags: [Checkout]
+      summary: Resolve a referral code
+      operationId: resolveLink
+      security: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+          example: MAYA10
+      responses:
+        '200':
+          description: Link with creator and products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/checkout/orders:
+    post:
+      tags: [Checkout]
+      summary: Create an order and a Stripe Checkout Session
+      description: |
+        Resolves the referral code, writes the order and one item per product,
+        records a flat 10% ambassador / 90% merchant split, and creates a Stripe
+        Checkout Session. The session id is stored as `transaction_id`.
+      operationId: createOrder
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '200':
+          description: Stripe Checkout Session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutSession'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /api/checkout/orders/confirm:
+    post:
+      tags: [Checkout]
+      summary: Mark an order complete and publish events
+      description: |
+        The storefront calls this after Stripe redirects back, passing the
+        Checkout Session id as `source`. The order is marked complete and
+        `order_created` is published to the admin, ambassador, and email topics.
+
+        This reference implementation does not verify a signed Stripe webhook.
+        Replace this call with webhook verification before production.
+      operationId: confirmOrder
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [source]
+              properties:
+                source:
+                  type: string
+                  description: Stripe Checkout Session id
+      responses:
+        '200':
+          description: Order confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: uint
+    ProductId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: uint
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid jwt cookie
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    RegisterRequest:
+      type: object
+      required: [first_name, last_name, email, password, password_confirm]
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        password_confirm:
+          type: string
+          format: password
+        is_ambassador:
+          type: string
+          enum: ['true', 'false']
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        scope:
+          type: string
+          enum: [admin, ambassador]
+          description: Required by the Users service; Admin and Ambassador set it server-side.
+    UpdateInfoRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+    UpdatePasswordRequest:
+      type: object
+      required: [password, password_confirm]
+      properties:
+        password:
+          type: string
+          format: password
+        password_confirm:
+          type: string
+          format: password
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        is_ambassador:
+          type: boolean
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+          format: double
+    ProductInput:
+      type: object
+      required: [title, price]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+          format: double
+    Link:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        user_id:
+          type: integer
+        product_id:
+          type: integer
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    CreateLinkRequest:
+      type: object
+      required: [products]
+      properties:
+        products:
+          type: array
+          items:
+            type: integer
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_id:
+          type: integer
+        product_title:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        ambassador_revenue:
+          type: number
+        admin_revenue:
+          type: number
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        user_id:
+          type: integer
+        ambassador_email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        zip:
+          type: string
+        complete:
+          type: boolean
+        transaction_id:
+          type: string
+        order_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    CreateOrderRequest:
+      type: object
+      required: [code, first_name, last_name, email, address, country, city, zip, products]
+      properties:
+        code:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        zip:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            required: [product_id, quantity]
+            properties:
+              product_id:
+                type: integer
+              quantity:
+                type: integer
+                minimum: 1
+    CheckoutSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Stripe Checkout Session id
+        url:
+          type: string
+          format: uri
+          description: Hosted payment page
+    LinkStat:
+      type: object
+      properties:
+        code:
+          type: string
+        order_count:
+          type: integer
+        revenue:
+          type: number
+    RankingMap:
+      type: object
+      additionalProperties:
+        type: number
+      description: Creator name mapped to ranking score

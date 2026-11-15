@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package static experience
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          mkdir -p dist
+          zip -qr "dist/ambassador-docs-${TAG}.zip" docs preview.html README.md LICENSE CHANGELOG.md
+          (cd dist && sha256sum ./*.zip > SHA256SUMS.txt)
+          ls -lh dist
+
+      - name: Prepare release notes
+        run: |
+          set -euo pipefail
+          NOTES="docs/releases/${GITHUB_REF_NAME}.md"
+          if [ -f "$NOTES" ]; then
+            cp "$NOTES" /tmp/release-notes.md
+          else
+            {
+              echo "# Ambassador ${GITHUB_REF_NAME}"
+              echo
+              echo "Container images and source archives are attached to this release."
+              echo "See CHANGELOG.md for the full list of changes."
+            } > /tmp/release-notes.md
+          fi
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          ASSETS=(dist/*.zip dist/SHA256SUMS.txt docs/openapi.yaml)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${ASSETS[@]}" --clobber
+          else
+            gh release create "$TAG" "${ASSETS[@]}" \
+              --title "Ambassador ${TAG}" \
+              --notes-file /tmp/release-notes.md
+          fi

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Halo Camp Light">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b2416"/><stop offset="1" stop-color="#a86838"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="36%" r="60%">
+      <stop offset="0" stop-color="#fbefdc" stop-opacity=".24"/><stop offset="1" stop-color="#fbefdc" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0v40" fill="none" stroke="#fbefdc" stroke-opacity=".08" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#grid)"/>
+  <circle cx="400" cy="300" r="300" fill="url(#glow)"/>
+  <circle cx="646" cy="154" r="96" fill="none" stroke="#fbefdc" stroke-opacity=".18" stroke-width="2"/>
+  <circle cx="646" cy="154" r="68" fill="none" stroke="#fbefdc" stroke-opacity=".14" stroke-width="2"/>
+  <g stroke-linecap="round" stroke-linejoin="round"><path d="M311 400c0-49 40-89 89-89s89 40 89 89" fill="none" stroke="#fbefdc" stroke-width="7"/>
+<path d="M300 400h200l-20 34H320l-20-34z" fill="none" stroke="#fbefdc" stroke-width="6"/>
+<path d="M400 311V270M329 348l-28-28M471 348l28-28M280 400h-42M520 400h42" stroke="#fbefdc" stroke-width="6" opacity=".7"/>
+<rect x="366" y="452" width="68" height="70" rx="18" fill="none" stroke="#fbefdc" stroke-width="7"/>
+<path d="M400 470v34" stroke="#fbefdc" stroke-width="6"/></g>
+  <text x="64" y="704" fill="#fbefdc" font-family="Inter, Arial, sans-serif" font-size="22" letter-spacing="7" opacity=".82">NORTHSTAR SUPPLY</text>
+  <text x="64" y="744" fill="#fbefdc" font-family="Inter, Arial, sans-serif" font-size="17" letter-spacing="2" opacity=".5">SHELTER / 03</text>
+</svg>

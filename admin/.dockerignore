@@ -1,0 +1,8 @@
+.git
+.gitignore
+.dbdata
+**/.dbdata
+Dockerfile
+prod.dockerfile
+README.md
+*.log

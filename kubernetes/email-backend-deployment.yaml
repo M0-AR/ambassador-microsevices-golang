@@ -15,7 +15,7 @@ spec:
         io.kompose.service: email-backend
     spec:
       containers:
-        - image: email:0.0.1
+        - image: ghcr.io/m0-ar/ambassador-email:1.0.0
           name: email-backend
           resources:
             requests:

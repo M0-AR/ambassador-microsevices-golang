@@ -1,0 +1,61 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /users
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /admin
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /ambassador
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /checkout
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /email
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /users
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /admin
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /ambassador
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /checkout
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /email
+    schedule:
+      interval: weekly

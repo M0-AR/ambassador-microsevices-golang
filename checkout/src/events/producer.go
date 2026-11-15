@@ -10,13 +10,8 @@ var Producer *kafka.Producer
 func SetupProducer() {
 	var err error
 
-	Producer, err = kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092",
-		"security.protocol": "SASL_SSL",
-		"sasl.username":     "63UVCVFVTBPESSWN",
-		"sasl.password":     "OxmD4lsSR8xT9CfQbjnLnaX3o1VX0W2qpyxP8YH8B/vPA4GlMHjgoV/bYTkx15Gx",
-		"sasl.mechanism":    "PLAIN",
-	})
+	config := KafkaConfig()
+	Producer, err = kafka.NewProducer(&config)
 
 	if err != nil {
 		panic(err)

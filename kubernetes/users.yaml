@@ -19,14 +19,28 @@ spec:
             - name: DB_DATABASE
               value: users
             - name: DB_HOST
-              value: 34.159.37.86
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_HOST
             - name: DB_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: DB_PASSWORD
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              value: root
-          image: md0ar/users:latest
+              valueFrom:
+                configMapKeyRef:
+                  name: ambassador-config
+                  key: DB_USERNAME
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ambassador-secrets
+                  key: JWT_SECRET
+          image: ghcr.io/m0-ar/ambassador-users:1.0.0
           name: users-backend
           ports:
             - containerPort: 8000

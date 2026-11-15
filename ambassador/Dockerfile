@@ -1,10 +1,13 @@
-FROM golang:1.16
+FROM golang:1.24-bookworm
 
 WORKDIR /app
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
 
+RUN go install github.com/air-verse/air@v1.61.7
+ENV PATH="/root/go/bin:${PATH}"
+
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 
-RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+EXPOSE 8000
+CMD ["air"]

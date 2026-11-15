@@ -1,0 +1,40 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Local databases and runtime volumes
+.dbdata/
+**/.dbdata/
+*.sqlite
+*.sqlite3
+*.db
+
+# Go build output
+/bin/
+/dist/
+/out/
+*.test
+*.out
+coverage.*
+build-*
+
+# Node tooling used for screenshots and local checks
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Local logs
+*.log
+logs/
