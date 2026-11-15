@@ -17,6 +17,7 @@
 /bin/
 /dist/
 /out/
+/email/email
 *.test
 *.out
 coverage.*
